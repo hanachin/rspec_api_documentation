@@ -22,7 +22,7 @@ module RspecApiDocumentation
         index.examples.each do |example|
           html_example = HtmlExample.new(example, configuration)
           FileUtils.mkdir_p(configuration.docs_dir.join(html_example.dirname))
-          File.open(configuration.docs_dir.join(html_example.dirname, html_example.filename), "w+") do |f|
+          File.open(configuration.docs_dir.join(html_example.dirname, URI.decode_www_form_component(html_example.filename)), "w+") do |f|
             f.write html_example.render
           end
         end
@@ -72,6 +72,7 @@ module RspecApiDocumentation
 
       def filename
         basename = description.downcase.gsub(/\s+/, '_').gsub(/[^a-z_]/, '')
+        basename = URI.encode_www_form_component description.downcase
         basename = Digest::MD5.new.update(description).to_s if basename.blank?
         "#{basename}.html"
       end

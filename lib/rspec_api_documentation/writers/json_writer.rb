@@ -23,7 +23,7 @@ module RspecApiDocumentation
         index.examples.each do |example|
           json_example = JsonExample.new(example, configuration)
           FileUtils.mkdir_p(docs_dir.join(json_example.dirname))
-          File.open(docs_dir.join(json_example.dirname, json_example.filename), "w+") do |f|
+          File.open(docs_dir.join(json_example.dirname, URI.decode_www_form_component(json_example.filename)), "w+") do |f|
             f.write Formatter.to_json(json_example)
           end
         end
@@ -81,6 +81,7 @@ module RspecApiDocumentation
 
       def filename
         basename = description.downcase.gsub(/\s+/, '_').gsub(/[^a-z_]/, '')
+        basename = URI.encode_www_form_component description.downcase
         "#{basename}.json"
       end
 
