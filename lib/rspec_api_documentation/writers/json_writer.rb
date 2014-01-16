@@ -81,7 +81,7 @@ module RspecApiDocumentation
 
       def filename
         basename = description.downcase.gsub(/\s+/, '_').gsub(/[^a-z_]/, '')
-        basename = URI.encode_www_form_component description.downcase
+        basename = URI.encode_www_form_component description.downcase.gsub(/\s+/, '_')
         "#{basename}.json"
       end
 
