@@ -34,6 +34,7 @@ module RspecApiDocumentation
     autoload :IndexWriter
     autoload :CombinedTextWriter
     autoload :CombinedJsonWriter
+    autoload :MarkdownWriter
   end
 
   def self.configuration
