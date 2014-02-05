@@ -78,6 +78,20 @@ module RspecApiDocumentation
         params
       end
 
+      def response_fields
+        params = []
+        if @example.respond_to?(:response_fields)
+          @example.response_fields.map do |param|
+            params << {
+              "Name" => param[:name],
+              "Description" => param[:description],
+              "Default" => ""
+            }
+          end
+        end
+        params
+      end
+
       def as_json(opts = nil)
          {
           :MethodName => description,
@@ -85,7 +99,8 @@ module RspecApiDocumentation
           :HTTPMethod => http_method,
           :URI => (requests.first[:request_path] rescue ""),
           :RequiresOAuth => "N",
-          :parameters => parameters
+          :parameters => parameters,
+          :response_fields => response_fields
         }
       end
     end
