@@ -12,11 +12,13 @@ module RspecApiDocumentation
             example.requests.each_with_index do |(request, response), i|
               f.puts "## Request:"
               f.puts
+              f.puts example.request_description + "\n" if example.request_description
               f.puts request
               f.puts
               f.puts example.response_fields
               f.puts "## Response:"
               f.puts
+              f.puts example.response_description + "\n" if example.response_description
               f.puts response
 
               if i + 1 < example.requests.count
@@ -109,6 +111,14 @@ module RspecApiDocumentation
       def format_response_field(field, s)
          non_ascii_count = s.to_s.each_char.reject {|c| c.ascii_only? }.count
          "%-#{max_width_for_response_fields(field) - non_ascii_count}s" % s
+      end
+
+      def request_description
+        example.metadata[:request_description]
+      end
+
+      def response_description
+        example.metadata[:response_description]
       end
 
       def response_fields
