@@ -62,14 +62,29 @@ module RspecApiDocumentation
         (default_hs & hs) + (hs - default_hs)
       end
 
+      def max_width_for(header)
+        len = [header.size, 3] +
+          example.metadata[:parameters].map {|p|
+            p[header].to_s.each_char.map{|c|
+              c.ascii_only? ? 1 : 2
+            }.inject(&:+)
+          }
+        len.compact.max
+      end
+
+      def format_s_for_header(header, s)
+         non_ascii_count = s.to_s.each_char.reject {|c| c.ascii_only? }.count
+         "%-#{max_width_for(header) - non_ascii_count}s" % s
+       end
+
       def parameters
         return "" unless example.metadata[:parameters]
         "## Parameters:\n\n" +
-        parameter_headers.join(' | ') + "\n" +
-        parameter_headers.size.times.map{"---"}.join(' | ') + "\n" + # sep
+        parameter_headers.map{|h| format_s_for_header(h, h) }.join(' | ') + "\n" +
+        parameter_headers.map{|h| "-" * max_width_for(h)}.join(' | ') + "\n" + # sep
         example.metadata[:parameters].inject("") do |out, parameter|
           # out << "`#{parameter[:name]}` | #{parameter[:description]}\n"
-          out << parameter_headers.map {|h| parameter[h] }.join(' | ') + "\n"
+          out << parameter_headers.map {|h| format_s_for_header(h, parameter[h]) }.join(' | ') + "\n"
         end + "\n"
       end
 
