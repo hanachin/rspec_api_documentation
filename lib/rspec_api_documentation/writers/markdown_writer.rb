@@ -72,6 +72,16 @@ module RspecApiDocumentation
         len.compact.max
       end
 
+      def max_width_for_response_fields(header)
+        len = [header.size, 3] +
+          example.metadata[:response_fields].map {|p|
+            p[header].to_s.each_char.map{|c|
+              c.ascii_only? ? 1 : 2
+            }.inject(&:+)
+          }
+        len.compact.max
+      end
+
       def format_s_for_header(header, s)
          non_ascii_count = s.to_s.each_char.reject {|c| c.ascii_only? }.count
          "%-#{max_width_for(header) - non_ascii_count}s" % s
@@ -96,14 +106,18 @@ module RspecApiDocumentation
         (default_hs & hs) + (hs - default_hs)
       end
 
+      def format_response_field(field, s)
+         non_ascii_count = s.to_s.each_char.reject {|c| c.ascii_only? }.count
+         "%-#{max_width_for_response_fields(field) - non_ascii_count}s" % s
+      end
+
       def response_fields
         return "" unless example.metadata[:response_fields]
         "## ResponseFields:\n\n" +
-        response_headers.join(' | ') + "\n" +
-        response_headers.size.times.map{"---"}.join(' | ') + "\n" + # sep
-        example.metadata[:response_fields].inject("") do |out, parameter|
-          # out << "`#{parameter[:name]}` | #{parameter[:description]}\n"
-          out << response_headers.map {|h| parameter[h] }.join(' | ') + "\n"
+        response_headers.map{|h| format_response_field(h, h) }.join(' | ') + "\n" +
+        response_headers.map{|h| "-" * max_width_for_response_fields(h) }.join(' | ') + "\n" + # sep
+        example.metadata[:response_fields].inject("") do |out, field|
+          out << response_headers.map {|h| format_response_field(h, field[h]) }.join(' | ') + "\n"
         end + "\n"
       end
 
