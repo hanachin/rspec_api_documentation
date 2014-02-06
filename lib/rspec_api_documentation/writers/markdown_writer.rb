@@ -96,7 +96,7 @@ module RspecApiDocumentation
         parameter_headers.map{|h| "-" * max_width_for(h)}.join(' | ') + "\n" + # sep
         example.metadata[:parameters].inject("") do |out, parameter|
           # out << "`#{parameter[:name]}` | #{parameter[:description]}\n"
-          out << parameter_headers.map {|h| format_s_for_header(h, parameter[h]) }.join(' | ') + "\n"
+          out << parameter_headers.map {|h| format_s_for_header(h, parameter[h]).split("\n").map(&:chomp).join("") }.join(' | ') + "\n"
         end + "\n"
       end
 
