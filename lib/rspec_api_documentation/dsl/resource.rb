@@ -37,6 +37,10 @@ module RspecApiDocumentation::DSL
         parameters.push(options.merge(:name => name.to_s, :description => description))
       end
 
+      def api_description(description)
+        metadata[:api_description] = description
+      end
+
       def request_description(description)
         metadata[:request_description] = description
       end

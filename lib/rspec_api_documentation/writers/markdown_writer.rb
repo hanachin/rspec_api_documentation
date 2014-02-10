@@ -7,6 +7,8 @@ module RspecApiDocumentation
           FileUtils.mkdir_p(configuration.docs_dir.join(example.resource_name))
           File.open(configuration.docs_dir.join(example.resource_name, "index.md"), "a+") do |f|
             f.print example.description
+            f.puts  example.api_description
+            f.puts
             f.print example.parameters
 
             example.requests.each_with_index do |(request, response), i|
@@ -54,6 +56,10 @@ module RspecApiDocumentation
 
       def description
         example.description + "\n" + "-" * example.description.length + "\n\n"
+      end
+
+      def api_description
+        example.metadata[:api_description]
       end
 
       def parameter_headers
