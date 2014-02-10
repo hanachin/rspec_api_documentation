@@ -7,20 +7,20 @@ module RspecApiDocumentation
           FileUtils.mkdir_p(configuration.docs_dir.join(example.resource_name))
           File.open(configuration.docs_dir.join(example.resource_name, "index.md"), "a+") do |f|
             f.print example.description
-            f.puts  example.api_description
+            f.puts example.api_description + "\n\n" if example.api_description
             f.puts
             f.print example.parameters
 
             example.requests.each_with_index do |(request, response), i|
               f.puts "## Request:"
               f.puts
-              f.puts example.request_description + "\n" if example.request_description
+              f.puts example.request_description + "\n\n" if example.request_description
               f.puts request
               f.puts
               f.puts example.response_fields
               f.puts "## Response:"
               f.puts
-              f.puts example.response_description + "\n" if example.response_description
+              f.puts example.response_description + "\n\n" if example.response_description
               f.puts response
 
               if i + 1 < example.requests.count
