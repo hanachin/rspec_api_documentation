@@ -1,3 +1,5 @@
+require 'rspec_api_documentation/writers/formatter'
+
 module RspecApiDocumentation
   module Writers
     class MarkdownWriter
