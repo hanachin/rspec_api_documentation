@@ -1,3 +1,5 @@
+require 'kconv'
+
 module RspecApiDocumentation
   class RackTestClient < ClientBase
 
@@ -21,7 +23,8 @@ module RspecApiDocumentation
     end
 
     def response_body
-      last_response.body
+      # XXX convert character encoding to utf-8
+      last_response.body.toutf8
     end
 
     def request_content_type
