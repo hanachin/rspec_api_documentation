@@ -167,7 +167,7 @@ module RspecApiDocumentation
           ],
           [],
           [
-            format_string(request[:response_body].blank? ? "" : Formatter.to_json(JSON.parse(request[:response_body])))
+            format_string(request[:response_body].blank? ? "" : (Formatter.to_json(JSON.parse(request[:response_body])) rescue request[:response_body]))
           ]
         ].map { |x| x.compact.join("\n") }.reject(&:blank?).join("\n\n") + "\n"
       end
