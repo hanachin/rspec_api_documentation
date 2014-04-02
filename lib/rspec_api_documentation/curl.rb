@@ -81,9 +81,23 @@ module RspecApiDocumentation
     end
 
     private
-    def format_header(header, value)
-      formatted_header = header.gsub(/^HTTP_/, '').titleize.split.join("-")
-      "#{formatted_header}: #{value}"
+    def format_header(header)
+      header.gsub(/^HTTP_/, '').titleize.split.join("-")
+    end
+
+    def format_full_header(header, value)
+      formatted_value = (value||"").gsub(/"/, "\\\"")
+      "#{format_header(header)}: #{formatted_value}"
+    end
+
+    def filter_headers(headers)
+      if !@config_headers_to_filer.empty?
+        headers.reject do |header|
+          @config_headers_to_filer.include?(format_header(header))
+        end
+      else
+        headers
+      end
     end
   end
 end
