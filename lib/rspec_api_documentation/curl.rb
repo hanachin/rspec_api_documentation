@@ -5,8 +5,9 @@ module RspecApiDocumentation
   class Curl < Struct.new(:method, :path, :data, :headers)
     attr_accessor :host
 
-    def output(config_host)
+    def output(config_host, config_headers_to_filer = nil)
       self.host = config_host
+      @config_headers_to_filer = Array(config_headers_to_filer)
       send(method.downcase)
     end
 
@@ -45,7 +46,7 @@ module RspecApiDocumentation
     end
 
     def headers
-      super.reject{ |k, v| k.eql?("Content-Type") && v.match(/multipart\/form-data/) }.map do |k, v|
+      filter_headers(super).reject{ |k, v| k.eql?("Content-Type") && v.match(/multipart\/form-data/) }.map do |k, v|
         "\\\n\t-H \"#{format_full_header(k, v)}\""
       end.join(" ")
     end
