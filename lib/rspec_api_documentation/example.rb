@@ -43,17 +43,7 @@ module RspecApiDocumentation
     end
 
     def requests
-      reqs = metadata[:requests] || []
-      reqs.each do |req|
-        if req[:request_headers]["Content-Type"].try(:match, /\Amultipart\/form-data/)
-          i = req[:request_body].index /^Content-Disposition: form-data.* filename=\"/
-          i = req[:request_body].index "\r\n\r\n", i unless i.nil?
-          unless i.nil?
-            req[:request_body] = "#{req[:request_body][0..i+3]}...[truncated file data]..."
-          end
-        end
-      end
-      reqs
+      metadata[:requests] || []
     end
   end
 end
