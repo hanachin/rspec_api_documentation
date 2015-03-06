@@ -11,6 +11,3 @@ gemfile:
   - gemfiles/rspec-3.2.x.gemfile
 script:
   - bundle exec rake
-branches:
-  only:
-    - master
